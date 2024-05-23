@@ -1,0 +1,31 @@
+pt-BR:
+  activerecord:
+    models:
+      recruiter: Recrutador
+      job: Vaga
+      submission: Candidatura
+    attributes:
+      default_attributes: &default_attributes
+        name: Nome
+        created_at: Cadastrado em
+        updated_at: Atualizado em
+
+      recruiter:
+        <<: *default_attributes
+        password: Senha
+        password_confirmation: Confirmação de Senha
+
+      job:
+        <<: *default_attributes
+        title: Título
+        description: Descrição
+        start_date: Data Inicial
+        end_date: Data Final
+        skills: Habilidades
+          
+      submission:
+        <<: *default_attributes
+        email: E-mail
+        mobile_phone: Telefone
+        resume: Resumo
+
