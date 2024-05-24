@@ -52,6 +52,8 @@ class  Api::V1::RecruitersController < ApiController
   
   def set_recruiter
     @recruiter = Recruiter.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    render json: { error: 'Recruiter not found' }, status: :not_found
   end
   
   def recruiter_params
