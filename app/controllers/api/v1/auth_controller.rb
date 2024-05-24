@@ -1,42 +1,52 @@
 class Api::V1::AuthController < ApplicationController
-	before_action :authenticate_recruiter!, only: [:logout]
 
-	def login
-		@recruiter = Recruiter.find_for_database_authentication(email: params[:email])
-		if @recruiter&.valid_password?(params[:password])
-			token = JsonWebToken.encode(recruiter_id: @recruiter.id)
-			render json: { token: token, message: 'Log in successfully' }, status: :ok
-		else
-			render json: { error: 'Invalid email or password' }, status: :unauthorized
-		end
-	end
+  def authenticate
+    auth = Authentication.new(login_params, request)
+    if auth.authenticate
+      render json: {
+        message: 'Login efetuado com sucesso!',
+        token: auth.generate_token,
+        recruiter: auth.recruiter
+      }, status: :ok
+    else
+      render json: {
+        message: 'E-mail ou senha incorreta'
+      }, status: :unauthorized
+    end
 
-	def create
-		@recruiter = Recruiter.new(recruiter_params)
-		if @recruiter.save
-			token = JsonWebToken.encode(recruiter_id: @recruiter.id)
-			render json: { recruiter: @recruiter, token: token }, status: :created
-		else
-			render json: @recruiter.errors, status: :unprocessable_entity
-		end
-	end
+  rescue StandardError => e
+    render json: {
+      message: 'E-mail ou senha não encontrados'
+    }, status: :not_found
+  end
 
-	def logout
-		render json: { message: 'Logged out successfully' }, status: :ok
-	end
+  def register
+    recruiter = Recruiter.new(register_params)
+    if recruiter.save
+      render json: {
+        message: 'Usuário registrado com sucesso!',
+        recruiter: recruiter
+      }, status: :created
+    else
+      render json: {
+        message: 'Erro ao registrar usuário',
+        errors: recruiter.errors.full_messages
+      }, status: :unprocessable_entity
+    end
+  rescue StandardError => e
+    render json: {
+      message: 'Erro inesperado ao registrar usuário'
+    }, status: :internal_server_error
+  end
 
-	private
 
-	def authenticate_recruiter!
-		header = request.headers['Authorization']
-		token = header.split(' ').last if header
-		decoded = JsonWebToken.decode(token)
-		@current_recruiter = Recruiter.find(decoded[:recruiter_id]) if decoded
-	rescue ActiveRecord::RecordNotFound, JWT::DecodeError
-		render json: { errors: 'Unauthorized' }, status: :unauthorized
-	end
+  private
 
-	def recruiter_params
-		params.require(:recruiter).permit(:name, :email, :password, :password_confirmation)
-	end
+  def login_params
+    params.require(:auth).permit(:email, :password)
+  end
+
+    def register_params
+    params.require(:recruiter).permit(:name, :email, :password, :password_confirmation)
+  end
 end

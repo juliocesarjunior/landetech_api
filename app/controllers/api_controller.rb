@@ -9,4 +9,12 @@ class ApiController < ActionController::API
 			total_count: collection.total_count
 		}
 	end
+
+	private
+
+	def authorization_request
+		auth = Authorization.new(request)
+		@current_recruiter = auth.current_recruiter
+		render json: { error: 'Not Authorized' }, status: 401 unless @current_recruiter
+	end
 end

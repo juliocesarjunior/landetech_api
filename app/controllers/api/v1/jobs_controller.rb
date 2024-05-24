@@ -1,5 +1,7 @@
 class  Api::V1::JobsController < ApiController
+
 	before_action :set_job, only: [:show, :update, :destroy]
+   	before_action :authorization_request
 
 	def index
 		@per_page = params[:per_page] || 10
