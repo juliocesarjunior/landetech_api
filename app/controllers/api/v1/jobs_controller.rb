@@ -1,7 +1,7 @@
 class  Api::V1::JobsController < ApiController
 
+	before_action :authorization_request
 	before_action :set_job, only: [:show, :update, :destroy]
-   	before_action :authorization_request
 
 	def index
 		@per_page = params[:per_page] || 10
@@ -13,8 +13,6 @@ class  Api::V1::JobsController < ApiController
 	end
 
 	def show
-		@job = Job.find(params[:id])
-
 		if @job
 			render json: @job, status: :ok
 		else
@@ -24,6 +22,7 @@ class  Api::V1::JobsController < ApiController
 
 	def create
 		@job = Job.new(job_params)
+		@job.recruiter_id = current_recruiter.id
 		if @job.save
 			render json: @job, status: :created
 		else
@@ -36,6 +35,14 @@ class  Api::V1::JobsController < ApiController
 			render json: @job
 		else
 			render json: @job.errors, status: :unprocessable_entity
+		end
+	end
+
+	def destroy
+		if @job.destroy
+			render json: {  message: 'Job deleted successfully' }, status: :ok
+		else
+			render json: { error: 'Failed to delete job' }, status: :unprocessable_entity
 		end
 	end
 

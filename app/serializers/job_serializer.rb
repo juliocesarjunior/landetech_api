@@ -6,7 +6,9 @@ class JobSerializer < BaseSerializer
               :end_date,
               :status,
               :skills,
-              :recruiter
+              :recruiter,
+              :created_at,
+              :updated_at
 
   def recruiter
     {

@@ -3,6 +3,9 @@ class Job < ApplicationRecord
 
   enum status: { active: 0, inactive: 1, deleted: 2 }
 
-  validates :title, :description, presence: true
+  validates :title, :description, :recruiter_id, presence: true
 
+  def destroy
+    self.update_attribute(:status, 2)
+  end
 end

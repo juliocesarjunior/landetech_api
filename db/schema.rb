@@ -22,7 +22,7 @@ ActiveRecord::Schema.define(version: 2024_05_22_232521) do
     t.date "end_date"
     t.integer "status", default: 0
     t.text "skills"
-    t.bigint "recruiter_id", null: false
+    t.bigint "recruiter_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["recruiter_id"], name: "index_jobs_on_recruiter_id"

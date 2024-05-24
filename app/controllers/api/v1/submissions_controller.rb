@@ -1,4 +1,5 @@
 class  Api::V1::SubmissionsController < ApiController
+	before_action :authorization_request
 	before_action :set_submission, only: [:show, :update, :destroy]
 	
 	def index
@@ -10,9 +11,7 @@ class  Api::V1::SubmissionsController < ApiController
 		render json: @submissions, meta: pagination_dict(@submissions), each_serializer: SubmissionSerializer
 	end
 	
-	def show
-		@submission = Submission.find(params[:id])
-		
+	def show		
 		if @submission
 			render json: @submission, status: :ok
 		else
@@ -34,6 +33,14 @@ class  Api::V1::SubmissionsController < ApiController
 			render json: @submission
 		else
 			render json: @submission.errors, status: :unprocessable_entity
+		end
+	end
+
+	def destroy
+		if @submission.destroy
+			render json: {  message: 'Submission deleted successfully' }, status: :ok
+		else
+			render json: { error: 'Failed to delete submission' }, status: :unprocessable_entity
 		end
 	end
 	

@@ -4,12 +4,14 @@ class SubmissionSerializer < BaseSerializer
               :email,
               :mobile_phone,
               :resume,
-              :job
-
-              def job
-                {
-                  id: object.job.id,
-                  name: object.job.name
-                }
-              end
+              :job,
+              :created_at,
+              :updated_at
+              
+    def job
+        {
+          id: object.job.id,
+          title: object.job.title
+        }
+    end
 end

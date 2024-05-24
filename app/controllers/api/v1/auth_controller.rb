@@ -6,7 +6,6 @@ class Api::V1::AuthController < ApplicationController
       render json: {
         message: 'Login efetuado com sucesso!',
         token: auth.generate_token,
-        recruiter: auth.recruiter
       }, status: :ok
     else
       render json: {
@@ -35,7 +34,7 @@ class Api::V1::AuthController < ApplicationController
     end
   rescue StandardError => e
     render json: {
-      message: 'Erro inesperado ao registrar usuário'
+      message: 'Erro inesperado ao registrar usuário',
     }, status: :internal_server_error
   end
 
@@ -47,6 +46,6 @@ class Api::V1::AuthController < ApplicationController
   end
 
     def register_params
-    params.require(:recruiter).permit(:name, :email, :password, :password_confirmation)
+    params.permit(:name, :email, :password, :password_confirmation)
   end
 end
