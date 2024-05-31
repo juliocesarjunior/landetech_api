@@ -3,7 +3,7 @@ class ApplicationController < ActionController::API
 		@q = Job.where(status: 0).ransack(params[:q])
 		@jobs = @q.result.page(params[:page]).order(id: :asc)
 
-		render json: @jobs, status: :ok
+		render json: @jobs, status: :ok, each_serializer: HomeSerializer
 	end
 
 	def show

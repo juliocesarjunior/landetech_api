@@ -31,8 +31,10 @@ class  Api::V1::RecruitersController < ApiController
   end
   
   def update
-    params[:recruiter].delete(:password) if params[:recruiter][:password].blank?
-    params[:recruiter].delete(:password_confirmation) if params[:recruiter][:password].blank?
+    if params[:recruiter].present?
+      params[:recruiter].delete(:password) if params[:recruiter][:password].blank?
+      params[:recruiter].delete(:password_confirmation) if params[:recruiter][:password_confirmation].blank?
+    end
     if @recruiter.update(recruiter_params)
       render json: @recruiter
     else
