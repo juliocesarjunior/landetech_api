@@ -14,6 +14,6 @@ Rails.application.routes.draw do
   root to: redirect('/jobs')  
   get 'jobs', to: 'application#index', as: :index
   get 'jobs/:id', to: 'application#show', as: :show_job
-  post 'submissions', to: 'application#create_submission', as: :create_submission
+  post 'jobs/:id', to: 'application#create_submission', as: :create_submission
 
 end

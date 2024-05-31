@@ -9,7 +9,7 @@ class Submission < ApplicationRecord
   def unique_submission_for_job
     existing_submission = Submission.find_by(job_id: job_id, email: email)
     if existing_submission
-      errors.add(:base, "You have already submitted for this job.")
+      errors.add(:base, "Você já se inscreveu para este Job.")
     end
   end
 end

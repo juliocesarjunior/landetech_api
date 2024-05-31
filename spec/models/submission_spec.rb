@@ -25,12 +25,13 @@ RSpec.describe Submission, type: :model do
         expect(submission1).to_not be_valid
       end
 
-      it 'ensures unique submission for job and email' do
-        existing_submission = FactoryBot.create :submission, job: job
-        submission1.email = existing_submission.email
-        expect(submission1).to_not be_valid
-        expect(submission1.errors[:base]).to include("You have already submitted for this job.")
-      end
+it 'ensures unique submission for job and email' do
+  existing_submission = FactoryBot.create :submission, job: job
+  submission1.email = existing_submission.email
+  expect(submission1).to_not be_valid
+  expect(submission1.errors[:base]).to include("Você já se inscreveu para este Job.")
+end
+
 
       it 'allows submission for different job and email' do
         existing_submission = FactoryBot.create :submission
